@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="success.html">
+        <div class="container">
+            <div class="box">
+                <h2>Birthday Book</h2>
+            </div>
+
+            <div class="box">
+                <label for="fname" class="label">Friend's Name</label>
+                <input type="text" class="input-tag" id="fname" required>
+            </div>
+
+            <div class="box">
+                <label for="bdate" class="label" id="date-label">Birth Date</label>
+                <input type="date" class="input-tag" id="bdate" required>
+            </div>
+
+            <div id="btn-div" class="box">
+                <input type="submit" id="btn-save" class="btn" value="Save">
+                <input type="reset" id="btn-cancel" class="btn" value="Cancel">
+            </div>
+        </div>
+    </form>
+    <button onclick="getBirthdays()">Show List</button>
+    <div id="list-div" class="box">
+        <div id="output"></div>
+        <div id="output-name"></div>
+        <div id="output-date"></div>
+    </div>
+    <script>
+
+        console.log(`hi..`);
+
+        let name = document.getElementById("fname").value;
+        let date = document.getElementById("bdate").value;
+
+        fetch('/search-birthdays')
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(`data: ${data}`);
+                
+                let output = '<h2>Posts</h2>';
+                    data.forEach(function (birthday) {
+                        output +=
+                            ` <div>
+                        <span>${birthday.name}</span>
+                        <span>${birthday.date}</span>
+                    </div>`
+                    });
+                    document.getElementById("output").innerHTML = output;
+                
+            })
+
+        // fetch("/search-birthdays")
+        //     .then(function (resp) {
+        //         resp.text().then(function (data) {
+        //             console.log(data);
+        //             var bdays = JSON.parse(data);
+        //             console.log(bdays.name);
+        //             document.getElementById("output-name").innerHTML = bdays.name;
+        //             document.getElementById("output-date").innerHTML = bdays.date;
+
+        //         })
+        //     });
+    </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<html>
+
+<head>
+    <style>
+        body{
+            background-image: url("https://wallpaperose.com/wp-content/uploads/2013/09/High-Jumping-The-Balloons.jpg");
+            font-size: 17px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 500px;
+            color: white;
+            margin-top: 10px;
+        }
+       .edit{
+            display: none;
+        } 
+        * {
+            margin: 3px;
+        }
+        .box-1{
+            /* border: 1px solid grey; */
+            border: 1px solid yellowgreen;
+            width: 400px;
+            padding: 10px;
+            margin-left: 206px;
+            margin-top: 20px;
+            /* background-color: floralwhite;
+            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTf9bfU2kZngDAmiJ-F379CcqyRluNPzJztvSTe62zkVOLBtG3e");
+            background-size: cover; */
+        }
+        #output{
+            /* background-image: url("https://i.pinimg.com/originals/af/a8/dd/afa8ddd1c8ab5c1de50d543a6e60bbd1.jpg");
+            background-size: cover;
+            background-color: floralwhite;
+            border: 1px solid grey; */
+            width: 477px;
+            padding: 10px;
+        }
+        button{
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+        .label{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        .input-tag{
+            padding-left: 6px;
+        }
+        #name,#date{
+            width: 142px;
+            padding-top: 9px;
+            padding-left: 17px;
+            background-color: #21243d;
+        }
+        .listOfBday{
+            width: 535px;
+            display: flex;
+            justify-content: flex-end;
+            margin-left: -37px;
+        }
+        .newListOfBday{
+            width: 530px;
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px;
+            margin-left: -4px;
+        }
+        .box{
+            display: flex;
+            justify-content: center;
+        }
+        .add{
+            background-color: #8bbabb;
+            box-shadow: 0px 3px #ccc;
+        }
+        .grey{
+            background-color: grey;
+            box-shadow: 0px 2px #ccc;
+        }
+        .green{
+            background-color: limegreen;
+            /* opacity: 0.7; */
+        }
+        .blue{
+            background-color: deepskyblue;
+            /* opacity: 0.7; */
+        }
+        .update-color{
+            background-color: #ff9280;
+        }
+        .cancel{
+            background-color: #fab95b;
+        }
+        #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+        z-index: -1;
+        }
+        form{
+            z-index: 100;
+        }
+        .heading{
+            margin-left: 206px;
+            width: 220px;
+            padding-left: 110px;
+        }
+        /* .listOfBday>*{
+            margin-left: 10px;
+        } */
+    </style>
+</head>
+
+<body onload="searchBirthdays()">
+    
+<form>
+    <h1 class="heading">Birthday App</h1>
+    <div class="box-1">
+        <div class="box">
+            <label for="fname" class="label">Friend's Name</label>
+            <input type="text" class="input-tag" id="fname" required>
+        </div>
+
+        <div class="box">
+            <label for="bdate" class="label" id="date-label">Birth Date</label>
+            <input type="date" class="input-tag" id="bdate" required>
+        </div>
+
+        <!-- <button id="btn-add">ADD NEW</button> -->
+        <div class="box">
+        <button onclick="addBirthday()" type="submit" class="add">Add</button>
+        <button type="reset" class="grey">Cancel</button>
+        </div>
+    </div>
+</form>
+<h1 id="champ-name"></h1>
+    <ul id="list"></ul>
+    <div id="list-div">
+        <div id="output"></div>
+    </div>
+<!-- <video autoplay muted loop id="myVideo">
+    <source src="https://ak3.picdn.net/shutterstock/videos/3237913/preview/stock-footage-brightly-lit-hanukkah-candles.webm" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video> -->
+    <script>
+
+        //  document.getElementById("btn-add").addEventListener("click",addBirthday());
+
+        function displayBirthdayList(birthdays) {
+            console.log(birthdays);
+
+            let output = `<h2>Friend's Birthday List</h2>`;
+
+            birthdays.forEach(function (birthday) {
+
+                let id = birthday._id;
+                let current_datetime = new Date(birthday.date); 
+
+                let mnth = (current_datetime.getMonth() + 1);
+                mnth = mnth.toString().length < 2 ? `0${mnth}`: mnth;
+
+                let day = current_datetime.getDate() ;
+                day = day.toString().length < 2 ? `0${day}`: day;
+
+                let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear();
+                let yyyyMMdd_date = current_datetime.getFullYear() + "-" + mnth +"-"+ day;
+                
+
+                output +=
+                    ` <div id="` + id + `" class="listOfBday">
+                                <span id="name">${birthday.name.toUpperCase()}</span>
+                                <input value="${birthday.name}" class="edit input-tag" required>
+                                <span id="date">${formatted_date}</span>
+                                <input type="date" value="${yyyyMMdd_date}" class="edit input-tag" required>
+                                <button class="green" onclick="editBirthday(this)">Edit</button>
+                                <button class="blue" onclick="deleteBirthday(this)">Delete</button>                                                  
+                                <button class="edit green" onclick="updateBirthday(this)">Update</button>
+                                <button class="edit red" onclick="cancelUpdation()">Cancel</button>
+                        </div>`
+            });
+
+            document.getElementById("output").innerHTML = output;
+        }
+
+        function searchBirthdays() {
+            fetch("/api/search-birthdays")
+                .then((resp) => resp.json())
+                .then((data) => {
+
+                    displayBirthdayList(data);
+                });
+
+        }
+
+
+        function addBirthday() {
+
+            let fname = document.getElementById("fname").value;
+            let bdate = document.getElementById("bdate").value;
+
+            const birthday = { "name": fname, "date": bdate };
+
+            // /?name=${fname} & date=${fdate}
+
+            fetch(`/add-birthday`, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(birthday),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    //console.log('Success:', data);
+                    displayBirthdayList(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function editBirthday(element) 
+        {
+            let div_id = element.parentNode.id;
+            let div = document.getElementById(div_id);
+
+            let name = div.children[0];
+            let date = div.children[2];
+            let edit = div.children[4];
+            let del = div.children[5];
+
+            let new_name = div.children[1];
+            let new_date = div.children[3];
+            let update = div.children[6];
+            let cancel = div.children[7];
+
+            name.classList.add("edit");
+            date.classList.add("edit");
+            edit.classList.add("edit");
+            del.classList.add("edit");
+
+            div.classList.remove("listOfBday");
+            div.classList.add("newListOfBday");
+
+            new_name.classList.remove("edit");
+            new_date.classList.remove("edit");
+            update.classList.remove("edit","green");
+            cancel.classList.remove("edit","blue");
+
+            update.classList.add("update-color");
+            cancel.classList.add("cancel");
+        }
+
+        function updateBirthday(element) 
+        {
+
+            let div_id = element.parentNode.id;
+            let div = document.getElementById(div_id);
+
+            //console.log("div id: "+ div_id);
+            //console.log("div : "+ div.children[3].value);
+
+            let new_name = div.children[1].value;
+            let new_date = div.children[3].value;
+
+            const birthday = { 
+                "_id": div_id, 
+                "name": new_name, 
+                "date": new_date 
+            };
+
+            fetch("/api/update-birthday", {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(birthday)
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                displayBirthdayList(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        }
+
+        function cancelUpdation(){
+            fetch("/cancel") 
+            .then((resp) => resp.json())
+                .then((data) => {
+
+                    displayBirthdayList(data);
+                });
+
+        }
+
+        function deleteBirthday(element){
+
+            let div_id = element.parentNode.id;
+
+            const birthday = { "_id":div_id };
+           
+            var r = confirm("Do you really want to delete this Birthday?");
+            if (r == true) {
+           
+                fetch(`/api/delete-birthday`, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(birthday),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    //console.log('Success:', data);
+                    displayBirthdayList(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+            } else {
+                    cancelUpdation();
+            }
+
+           
+
+            
+        }
+
+        
+
+
+/*        function updateBirthday(element) {
+
+            let new_div = document.createElement("div");
+            let input_name = document.createElement("input");
+            let input_date = document.createElement("input");
+            let update = document.createElement("button");
+            let cancel = document.createElement("button");
+
+            update.innerHTML = "Update";
+            cancel.innerHTML = "Cancel";
+
+
+            input_name.setAttribute("type", "text");
+            input_date.setAttribute("type", "date");
+            input_name.setAttribute("id", "iname");
+            input_date.setAttribute("id", "idate");
+            input_name.setAttribute("value", "Gokul");
+            input_date.setAttribute("value", "20-12-1998");
+
+            let div_id = element.parentNode.id;
+            let div = document.getElementById(div_id);
+
+            div.appendChild(input_name);
+            div.appendChild(input_date);
+            new_div.appendChild(update);
+            new_div.appendChild(cancel);
+
+            div.appendChild(new_div);
+            console.log("just above update...! id: "+ div_id);
+
+            update.onclick = function(div_id,name,date){
+                       
+            console.log("update clicked..!");
+            
+            const birthday = {"_id":div_id,"name":name, "date":date};
+
+            fetch("/api/update-birthday", {
+                method: 'PUT', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(birthday)
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // console.log('Success:', data);
+                    displayBirthdayList(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+             }
+
+        }*/
+       
+    </script>
+</body>
+
+</html>
